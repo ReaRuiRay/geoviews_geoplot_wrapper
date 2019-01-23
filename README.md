@@ -38,3 +38,8 @@ instance * gv.tile_sources.Wikipedia
 ```
 ![Output figure](https://github.com/loopal/geoviews_geoplot_wrapper/blob/master/example.png)
 
+## Other Tools
+Several methods can be useful for other applications such as the regridding functions (no interpolation, just use nearest neighbor). 
+
+#### regrid_regular(data, lon, lat, reso=0.01)
+`data`, `lon`, `lat` are numpy arrays with same shape. `reso` is the output resolution. The domain of output is calculated automatically using the min and max of `lon` and `lat`. The output will be a tuple: `(grid, output_lon, output_lat)`.
