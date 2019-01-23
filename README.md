@@ -1,0 +1,2 @@
+# geoviews_geoplot_wrapper
+Geoviews can use bokeh as the renderer, however it currently lacks the ability to show more than one data variable in the hover information (vdims can't be set to more than one variable). As a work-around, we can use holoviews instead and use geoviews for basemaps. We need to use Mercator projeciton in Holoviews so that there is no problem when use holoviews X geoviews. 
