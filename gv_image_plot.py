@@ -47,23 +47,23 @@ def regrid_regular(data,lon,lat, reso=0.01):
 
 def regrid_regular_xarray(data, reso):
 #accept xarray as input, wrapper of regrid_hrrr_regular()
-    lon = data['lon_merc'].values
-    lat = data['lat_merc'].values
+    lon = data['Longitude'].values
+    lat = data['Latitude'].values
     
     region = (np.floor(np.min(lon)), np.floor(np.min(lat)), np.ceil(np.max(lon)), np.ceil(np.max(lat)))
     output_lon = np.arange(region[0],region[2],reso) + reso*0.5
     output_lat = np.arange(region[1],region[3],reso) + reso*0.5
     
-    border   = (region[0]+reso*0.5, region[1]+reso*0.5, region[2]-reso*0.5, region[3]-reso*0.5)
+    border = (region[0]+reso*0.5, region[1]+reso*0.5, region[2]-reso*0.5, region[3]-reso*0.5)
     
     var_names = list(data.keys())
     
-    grid_set = xr.Dataset(coords={'lon_merc': (['lon_merc'], output_lon),\
-                               'lat_merc': (['lat_merc'], output_lat)})
+    grid_set = xr.Dataset(coords={'Longitude': (['Longitude'], output_lon),\
+                               'Latitude': (['Latitude'], output_lat)})
     pbar = tqdm(total=len(var_names), desc='Data variable regridding')
     for i in range(0, len(var_names)):
         (grid,garbage1,garbage2) = regrid_regular(data[var_names[i]].values, lon, lat, reso)
-        grid_set[var_names[i]] = xr.DataArray(grid,dims=['lat_merc','lon_merc'],name=var_names[i])
+        grid_set[var_names[i]] = xr.DataArray(grid,dims=['Latitude','Longitude'],name=var_names[i])
         pbar.update(1)
     pbar.close()
                                   
@@ -93,7 +93,7 @@ def gv_plot_merc(data_regrid, color_var, cmap):
     hover = HoverTool(tooltips=tooltips)
 
     #This illustrates that the method works!
-    data_gv = hv.Image(data_regrid, kdims = ['lon_merc','lat_merc'],\
+    data_gv = hv.Image(data_regrid, kdims = ['Longitude','Latitude'],\
                        vdims=vdims)                                                     
     data_gv = data_gv.opts(tools=[hover], cmap=cmap,colorbar=True,width=800,height=500)
     
@@ -108,11 +108,11 @@ def gv_image_plot(data, reso, color_var, cmap):
     fx, fy = transform(Proj(init='epsg:4326'), Proj(init='epsg:3857'), data['lon'].values, data['lat'].values)
     
     dims = [data['lon'].dims[0], data['lon'].dims[1]]
-    x_xr = xr.DataArray(fx,dims=dims,name='lon_merc')
-    y_xr = xr.DataArray(fy,dims=dims,name='lat_merc')
-    data['lon_merc'] = x_xr
-    data['lat_merc'] = y_xr
-    data = data.reset_coords(['lon', 'lat']).set_coords(['lon_merc', 'lat_merc'])
+    x_xr = xr.DataArray(fx,dims=dims,name='Longitude')
+    y_xr = xr.DataArray(fy,dims=dims,name='Latitude')
+    data['Longitude'] = x_xr
+    data['Latitude'] = y_xr
+    data = data.reset_coords(['lon', 'lat']).set_coords(['Longitude', 'Latitude'])
     
     #regrid to normal (orthogonal) grids
     data_regrid= regrid_regular_xarray(data,reso)

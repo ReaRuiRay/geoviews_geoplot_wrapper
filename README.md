@@ -25,10 +25,16 @@ The colormap used in plotting.
 The return is a geoviews Image instance and can be modified if like. 
 If used as `gv_plot(data, reso, color_var, cmap)`, the figure will be plotted directly in Jupyer notebook. 
 
-## Examples
+## Examples for Jupyer Notebook
+``` python
+import sys
+sys.path.append('/location/the/py/file/is/')
+from gv_image_plot import gv_image_plot
+#import importlib
+#importlib.reload(sys.modules['gv_image_plot'])
+import geoviews as gv
+instance = gv_image_plot(cloud_set, 20000, 'CloudCeiling', 'Blues_r').redim.range(CloudCeiling = (0,4000))
+instance * gv.tile_sources.Wikipedia
 ```
-import geoviews
-gv_instance = gv_image_plot(dataset, 20000, 'CloudCeiling', 'Blues_r').redim.range(CloudCeiling = (0,4000))
-gv_instance * geoviews.tile_sources.Wikipedia
-```
+![Output figure](https://github.com/loopal/geoviews_geoplot_wrapper/blob/master/example.png)
 
